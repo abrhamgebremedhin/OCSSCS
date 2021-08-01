@@ -1,0 +1,12 @@
+media
+env
+db.sqlite3
+# pyc files
+migrations
+__pycache__
+accounts/migrations
+branche/migrations
+OCSSC/migrations
+accounts/__pycache__
+branche/__pycache__
+OCSSC/__pycache__
