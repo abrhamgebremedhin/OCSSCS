@@ -1,7 +1,6 @@
 from django import forms 
 from django.contrib.auth.models import Group, Permission
-from django.contrib.auth.forms import ( 
-                                        ReadOnlyPasswordHashField,
+from django.contrib.auth.forms import ( ReadOnlyPasswordHashField,
                                         UserCreationForm,
                                         AuthenticationForm,
                                         UsernameField
@@ -12,19 +11,20 @@ from django.utils.translation import gettext as _
 from django.contrib.admin.forms import AdminAuthenticationForm
 
 from django_summernote.widgets import SummernoteWidget
-
+from .models import User
+from branchs.models import OCSSC_branch_office
 # from accounts.models import Company, CompanyAdmin, Customer
 # from company.models import CompanyStaff
 
 
 # For the Front End Login Form
 class FrontLoginForm(AuthenticationForm):
-    username = forms.CharField(label='Email / Username',widget=forms.TextInput())
+    username = forms.CharField(label='Username',widget=forms.TextInput())
 
 # Customized Admin Login Form
 class AdminLoginForm(AdminAuthenticationForm):
-    username = forms.CharField(label='Email / Username',widget=forms.TextInput(
-        attrs={'placeholder':'Email / Username'}
+    username = forms.CharField(label='Username',widget=forms.TextInput(
+        attrs={'placeholder':'Username'}
     ))
     password = forms.CharField(
         label=_("Password"),
@@ -35,22 +35,19 @@ class AdminLoginForm(AdminAuthenticationForm):
 # Abstract User Sign Up Form where the other forms extend this form.
 class AbstractUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(
-        attrs={"placeholder": "Password"},
+        attrs={"class":"form-control","placeholder": "Password"},
     ))
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(
-        attrs={"placeholder": "Re-Type Password"},
-    ))
+        attrs={"class":"form-control","placeholder": "Re-Type Password"},
+    )) 
 
     class Meta:
-        model = get_user_model()
-        fields = ('first_name', 'last_name',
-                  'username', 'email')
         widgets = {
-            'first_name': forms.TextInput(attrs={"placeholder": "First Name", },),
-            'last_name': forms.TextInput(attrs={"placeholder": "Last Name"},),
-            'username': forms.TextInput(attrs={"placeholder": "User Name"},),
-            'email': forms.TextInput(attrs={"placeholder": "User Email"},),
-            }
+            'first_name': forms.TextInput(attrs={},),
+            'last_name': forms.TextInput(attrs={},),
+            'username': forms.TextInput(attrs={},),
+            'phone_number': forms.TextInput(attrs={},),
+        }
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -60,10 +57,24 @@ class AbstractUserCreationForm(forms.ModelForm):
             raise forms.ValidationError("Passwords don't match")
         return password2
  
+class UserCreationUpdateForm(AbstractUserCreationForm):
+    office_branch = forms.ModelChoiceField(
+        empty_label="Select Category",
+        queryset=OCSSC_branch_office.objects.all(),
+        widget=forms.Select(attrs={'class':'form-control form-control-uniform'}),
+        required=True)
+    user_type = forms.ChoiceField(required=True,
+                      widget=forms.Select(attrs={'type': 'select', "class": "form-control form-control-uniform"}),
+                      choices=(('is_manager', 'is_manager'), ('is_auditor', 'is_auditor'), 
+                        ('is_customer_service', 'is_customer_service'), ('is_system_admin', 'is_system_admin'),))
+    class Meta(AbstractUserCreationForm.Meta):
+        model = User
+        fields = ('office_branch','user_type' )
 
 
 
-class CustomerCreationForm(AbstractUserCreationForm):
+
+class UserCreationForm(AbstractUserCreationForm):
     """ A form is prepared for normal/customer users to regster. Includes all the required
         fields, plus a repeated password.
     """
@@ -73,29 +84,53 @@ class CustomerCreationForm(AbstractUserCreationForm):
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(
         attrs={},
     ))
+    office_branch = forms.ModelChoiceField(
+        empty_label="Select Category",
+        queryset=OCSSC_branch_office.objects.all(),
+        widget=forms.Select(attrs={'class':'form-control form-control-uniform'}),
+        required=True)
+
+
+    user_type = forms.ChoiceField(required=True,
+                              widget=forms.Select(attrs={'type': 'select', "class": "form-control form-control-uniform"}),
+                              choices=(('is_manager', 'is_manager'), ('is_auditor', 'is_auditor'), 
+                                ('is_customer_service', 'is_customer_service'), ('is_system_admin', 'is_system_admin'),))
+
 
     class Meta(AbstractUserCreationForm.Meta):
+        model = User
+        fields = ('first_name', 'last_name','username' ,'phone_number',  
+                    'photograph','identification','address','city',
+                    'qualification_document','date_of_hire')
         widgets = {
-            'first_name': forms.TextInput(attrs={},),
-            'last_name': forms.TextInput(attrs={},),
-            'username': forms.TextInput(attrs={},),
-            'email': forms.TextInput(attrs={},),
-            'phone_number': forms.TextInput(attrs={},),
-        }
+            'first_name': forms.TextInput(attrs={"class":"form-control","placeholder": "First Name", },),
+            'last_name': forms.TextInput(attrs={"class":"form-control","placeholder": "Last Name"},),
+            'username': forms.TextInput(attrs={"class":"form-control","placeholder": "User Name"},),
+            'phone_number': forms.TextInput(attrs={"class":"form-control","placeholder": "phone number", },),
+            'address':forms.TextInput(attrs={"class":"form-control","placeholder": "Address", },),
+            'city':forms.TextInput(attrs={"class":"form-control","placeholder": "Ciry", },),
+            'date_of_hire':forms.TextInput(attrs={"class":"form-control","placeholder": "First Name", },),
+            }
 
     @transaction.atomic
     def save(self):
         user = super().save(commit=False)
-        user.is_staff = False
-        user.is_superuser = False
-        user.is_customer = True
-        user.is_active = False
+        user.set_password(self.cleaned_data.get("password1"))
+        if self.cleaned_data.get("user_type") == "is_manager":
+            user.is_manager = True
+            user.save()
+        if self.cleaned_data.get("user_type") == "is_auditor":
+            user.is_auditor = True
+            user.save()
+        if self.cleaned_data.get("user_type") == "is_customer_service":
+            user.is_customer_service = True
+            user.save()
+        if self.cleaned_data.get("user_type") == "is_system_admin":
+            user.is_system_admin = True
+            user.save()
         user.set_password(self.cleaned_data.get("password1"))
         user.save()
-        customer = Customer.objects.create(user=user)
-        customer.save()
         return user
-
 
 class AdminCreateUserForm(AbstractUserCreationForm):
     """
@@ -146,8 +181,6 @@ class AdminCreateUserForm(AbstractUserCreationForm):
             comp_admin.save()
         return user
 
-
-
 class GroupCreationForm(forms.ModelForm):
     class Meta:
         model = Group
@@ -161,7 +194,6 @@ class GroupCreationForm(forms.ModelForm):
         if commit:
             group.save()
         return group
-
 
 class UserChangeForm(forms.ModelForm):
     """A form for updating users. Includes all the fields on

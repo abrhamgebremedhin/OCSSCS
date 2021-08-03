@@ -29,7 +29,7 @@
                    <div class="card">
                       <div class="card-header">
                             <div class="header-elements" align="left">
-                            <a href="{% url 'create' %}" class="btn btn-success">Add a User</a> 
+                            <a href="{% url 'account_create' %}" class="btn btn-success">Add a User</a> 
                             
                             </div>
                         </div>
@@ -43,99 +43,84 @@
 
                           <thead>
                           <tr>
-                            <th>Photograph</th>
-                            <th>First name</th>
-                            <th>Email</th>
-
-                            <th>Phone</th>
-                            <th>Address</th>
+                            <th>name</th>
+                            <th>Active</th>
+                            <th>city</th>
+                            <th>office_branch</th>
                             <th>User Type</th>
 
-                            <th>Created By</th>
+                            <th>Date of hire</th>  
                             <th>Edit</th>
+                            <th>Details</th>
                             <th>Suspend</th>
-
                             <th>Delete</th>
                           </tr>
                           </thead>
+
                           <tbody>
+                            {%for form in accounts%}
                           <tr>
-                            <td>Trident</td>
-                            <td>Internet
-                              Explorer 4.0
-                            </td>
-                            <td>Win 95+</td>
+                            <th>{{form.first_name}} {{form.last_name}}</th>
+                            <th>{{form.active}}</th>
+                            <th>{{form.city}}</th>
 
-                            <td> 4</td>
-                            <td>X</td>
-                            <td>X</td>
+                            <th>{{form.office_branch}}</th>
 
-                            <td>-</td>
+                            {%if form.is_manager == True%}
+                            <th>Manager</th>
+                            
+                            {%elif form.is_auditor == True%}
+                            <th>Auditor</th>
+                            
+                            {%elif form.is_customer_service == True%}
+                            <th>Customer Service</th>
+                            
+                            {%elif form.is_system_admin == True%}
+                            <th>System Admin</th>
+
+                            {%else%}
+                            <th>-</th>
+                            {%endif%}
+
+
+                            <th>{{form.date_of_hire}}</th>
+                            
                             <td>
-                              <button type="button" class="btn btn-block btn-outline-primary btn-sm">Edit</button>
+                              <a href="{% url 'account_edit' id=form.id %}" type="button" class="btn btn-block btn-outline-primary btn-sm">Edit</a>
                             </td>
+                            {%if form.active%}
                             <td>
-                              <button type="button" class="btn btn-block btn-outline-waring btn-sm">Suspend</button>
+                            <a href="{% url 'account_suspend' id=form.id %}" type="button" class="btn btn-block btn-outline-info btn-sm">Suspend</a>
                             </td>
+                            {%else%}
                             <td>
-                              <button type="button" class="btn btn-block btn-outline-danger btn-sm">Delete</button>
+                            <a href="{% url 'account_suspend' id=form.id %}" type="button" class="btn btn-block btn-outline-warning btn-sm">Unsuspend</a>
                             </td>
+                            {%endif%}
+
+                            <td>
+                            <a href="{% url 'account_detail' id=form.id %}" type="button" class="btn btn-block btn-outline-secondary btn-sm">Detail</a>
+                          </td>
+                            
+                            <td>
+                              <a href="{% url 'account_delete' id=form.id%}" type="button" onclick="return confirm ('Are you sure you want to delete this ?')" class="btn btn-block btn-outline-danger btn-sm">Delete</a>
+                            </td>
+
                           </tr>
-                          <tr>
-                            <td>Trident</td>
-                            <td>Internet
-                              Explorer 4.0
-                            </td>
-                            <td>Win 95+</td>
-
-                            <td> 4</td>
-                            <td> 4</td>
-                            <td>-</td>
-
-                            <td>-</td>
-                            <td>
-                              <button type="button" class="btn btn-block btn-outline-primary btn-sm">Edit</button>
-                            </td>
-                            <td>
-                              <button type="button" class="btn btn-block btn-outline-waring btn-sm">Suspend</button>
-                            </td>
-                            <td>
-                              <button type="button" class="btn btn-block btn-outline-danger btn-sm">Delete</button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Other browsers</td>
-                            <td>All others</td>
-                            <td>-</td>
-
-                            <td>-</td>
-                            <td>U</td>
-                            <td>-</td>
-
-                            <td>-</td>
-                            <td>
-                              <button type="button" class="btn btn-block btn-outline-primary btn-sm">Edit</button>
-                            </td>
-                            <td>
-                              <button type="button" class="btn btn-block btn-outline-waring btn-sm">Suspend</button>
-                            </td>
-                            <td>
-                              <button type="button" class="btn btn-block btn-outline-danger btn-sm">Delete</button>
-                            </td>
-                          </tr>
+                            {%endfor%}
+                        
                           </tbody>
                           <tfoot>
                           <tr>
-                            <th>Photograph</th>
-                            <th>First name</th>
-                            <th>Email</th>
-
-                            <th>Phone</th>
-                            <th>Address</th>
+                             <th>name</th>
+                             <th>Active</th>
+                            <th>city</th>
+                            <th>office_branch</th>
                             <th>User Type</th>
 
-                            <th>Created By</th>
+                            <th>Date of hire</th>  
                             <th>Edit</th>
+                            <th>Details</th>
                             <th>Suspend</th>
                             <th>Delete</th>
                           </tr>

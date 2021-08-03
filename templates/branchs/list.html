@@ -30,7 +30,7 @@
                    <div class="card">
                       <div class="card-header">
                             <div class="header-elements" align="left">
-                            <a href="{% url 'create' %}" class="btn btn-success">Add a Branch</a> 
+                            <a href="{% url 'Branch_create' %}" class="btn btn-success">Add a Branch</a> 
                             
                             </div>
                         </div>
@@ -62,10 +62,10 @@
                             <td>{{form.manager}}</td>                            
                             <td>{{form.created_by}}</td>
                             <td>
-                              <a href="{% url 'Edit' id=form.id%}" class="btn btn-block btn-outline-primary btn-sm">Edit</a> 
+                              <a href="{% url 'Branch_edit' id=form.id%}" class="btn btn-block btn-outline-primary btn-sm">Edit</a> 
                             </td>
                             <td>
-                              <a href="{% url 'Delete' id=form.id %}" onclick="return confirm ('Are you sure you want to delete this ?')" class="btn btn-block btn-outline-danger btn-sm">Delete</a>
+                              <a href="{% url 'Branch_delete' id=form.id %}" onclick="return confirm ('Are you sure you want to delete this ?')" class="btn btn-block btn-outline-danger btn-sm">Delete</a>
                             </td>
                           </tr>
                             {%endfor%}

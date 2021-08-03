@@ -6,7 +6,7 @@ from accounts.models import User
 class BranchForm(forms.ModelForm):
 	manager = forms.ModelChoiceField(
         empty_label="Select Category",
-        queryset=User.objects.filter(is_manager=False),
+        queryset=User.objects.all(),
         widget=forms.Select(attrs={'class':'form-control form-control-uniform'}),
         required=True)
 	class Meta:

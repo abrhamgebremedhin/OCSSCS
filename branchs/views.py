@@ -27,9 +27,9 @@ class Create(View):
 			branch = form.save(commit=False)
 			branch.save()
 			print("Success 1")
-			return redirect("")
+			return redirect("Branch")
 		#messages.error(self.request, "some thing went wrong")
-		return redirect("create")
+		return redirect("Branch_create")
 class Edit(View):
 	def get(self,*args,**kwargs):
 		form = OCSSC_branch_office.objects.get(id=self.kwargs['id'])
@@ -39,24 +39,30 @@ class Edit(View):
 		return render(self.request, template_name, context)
 	def post(self,*args,**kwargs):
 		form = BranchForm(self.request.POST)
+		id = self.kwargs['id']
+		user = User.objects.all()
 		branch = OCSSC_branch_office.objects.get(id=self.kwargs['id'])
 		if form.is_valid():
+			print("Success 2")
 			branch.name = form.cleaned_data.get('name')
 			branch.city = form.cleaned_data.get('city')
 			branch.address = form.cleaned_data.get('address')
 			branch.head_office = form.cleaned_data.get('head_office')
 			branch.manager = form.cleaned_data.get('manager')
 			branch.save()
-			print("Success 2")
-			return redirect("")
+			return redirect("Branch")
 		#messages.error(self.request, "some thing went wrong")
-		return redirect("Edit")
+		print("Success 1")
+		user = User.objects.all()
+		template_name="branchs/edit.html"
+		context = {'form':form,"user":user}
+		return render(self.request, template_name, context)
 
 class Delete(View):
 	def get(self,*args,**kwargs):
 		branch = OCSSC_branch_office.objects.get(id=self.kwargs['id'])
 		branch.delete()
-		return redirect("") 
+		return redirect("Branch") 
 
 		'''
 		form = AnnouncementForm(self.request.POST,self.request.FILES) 

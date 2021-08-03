@@ -23,7 +23,7 @@ class User(AbstractUser):
 	city = models.CharField(max_length=100,default="")
 	position = models.CharField(max_length=100,default="")
 	qualification_document = models.ImageField(null=True)
-	office_branch = models.CharField(max_length=100,default="")
+	office_branch = models.CharField(max_length=100,null=True)
 	is_manager = models.BooleanField(default=False)
 	is_auditor = models.BooleanField(default=False)
 	is_customer_service = models.BooleanField(default=False)
@@ -31,7 +31,7 @@ class User(AbstractUser):
 	active = models.BooleanField(default=False) 
 	date_of_hire = models.DateTimeField(null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
-	created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='Employee_created_by')
+	# created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='Employee_created_by')
 
 class Customer(models.Model):
 	first_name = models.CharField(max_length=100,default="")

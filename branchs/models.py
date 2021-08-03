@@ -13,3 +13,6 @@ class OCSSC_branch_office(models.Model):
 	date = models.DateTimeField(auto_now_add=True)
 	created_by = models.BooleanField(default=True)
 	#created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='branch_created_by')
+	
+	def __str__(self):
+		return self.name
