@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% block extrastyle %} 
+
+
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="/static/plugins/daterangepicker/daterangepicker.css">
+  
+
+
+ {% endblock %}
+{%load crispy_forms_tags %}
+{%block title%} OCSSC | Create {%endblock%}
+
+    <!-- /.content -->
+{%block content%}
+    <!---------->
+        <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Edit Customer information</h1>
+          </div><!-- /.col -->
+           
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+      <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          
+         <div class="col-lg-12">
+         <div class="card"> 
+                       
+              <div class="card-header">
+                <h3 class="card-title">Customer</h3>
+              </div>
+              <!-- /.card-header -->
+              <form action="" method="post" enctype="multipart/form-data">
+                <div class="card-body">
+                  {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                      
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <p> {{ error }} </p>
+                            {% endfor %}
+                        {% endfor %}
+                    
+                    </div>
+                    {% endif %}
+
+                  {%csrf_token%}
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">First Name</label> 
+                    <input type="text" required name="first_name" class="form-control" value="{{form.first_name}}" >
+                    
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Middle Name</label> 
+                    <input type="text" required name="middle_name" class="form-control" value="{{form.middle_name}}" >
+                    
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Last Name</label> 
+                    <input type="text" required name="last_name" class="form-control" value="{{form.last_name}}" >
+                    
+                  </div>
+
+                  
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Phone</label> 
+                    <input type="text" required name="phone_number" class="form-control" value="{{form.phone_number}}" >
+                    
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">address</label>
+                    <input type="text" required name="address" class="form-control" value="{{form.address}}" > 
+                    
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">city</label> 
+                    <input type="text" required name="city" class="form-control" value="{{form.city}}" >
+                    
+                  </div>
+
+
+                  <div class="form-group"> 
+                      <label> Branch</label> 
+                      <select required name="office_branch" class="form-control form-control-uniform" data-fouc>
+                        <option value="{{form.office_branch.id}}">{{form.office_branch}}</option>
+                          {%for name in branchs%}
+                            {%if name == form.office_branch %}
+                            {%else%}
+                            <option value="{{name.id}}">{{name}}</option>
+                            {%endif%}
+                          {%endfor%}
+                      </select>
+                  </div>
+
+                  <div class="form-group"> 
+                      <label> Savings Account Type</label> 
+                      <select required name="savings_type" class="form-control form-control-uniform" data-fouc>
+                        <option value="{{form.savings_type.id}}">{{form.savings_type}}</option>
+                          {%for name in savings%}
+                            {%if name == form.savings_type %}
+                            {%else%}
+                            <option value="{{name.id}}">{{name}}</option>
+                            {%endif%}
+                          {%endfor%}
+                      </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Current Document</label> 
+                    <img class="card-img img-fluid" src="{{form.document.url}}" width ="250" height = "200" alt="">
+                    
+                      <div class="form-group row">
+                      <label class="col-form-label col-lg-3">Change images:</label>
+                      <div class="col-lg-9">
+                          <input  type="file"  name="document" >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Photo Graph</label> 
+                    <img class="card-img img-fluid" src="{{form.photograph.url}}" width ="250" height = "200" alt="">
+                    
+                      <div class="form-group row">
+                      <label class="col-form-label col-lg-3">Change images:</label>
+                      <div class="col-lg-9">
+                          <input  type="file"  name="photograph" >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Identification</label> 
+                    <img class="card-img img-fluid" src="{{form.identification.url}}" width ="250" height = "200" alt="">
+                    
+                      <div class="form-group row">
+                      <label class="col-form-label col-lg-3">Change images:</label>
+                      <div class="col-lg-9">
+                          <input  type="file"  name="identification" >
+                      </div>
+                    </div>
+                  </div>
+
+                  
+                  </div>
+                  <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                </div>
+                <!-- /.card-body -->
+
+                
+              </form>
+         </div>       
+         </div>
+         </div>
+ 
+         </div>
+       </section>
+
+       <script>
+         //Date picker
+    $('#reservationdate').datetimepicker({
+        format: 'L'
+    });
+
+        //Date and time picker
+    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+        //Timepicker
+    $('#timepicker').datetimepicker({
+      format: 'LT'
+    })
+       </script>
+  {%endblock%}
+
+                
+
+
+<!---------->
+  <!-- /.content-wrapper -->
+
+
+<!-- ./wrapper -->
+

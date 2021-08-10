@@ -167,7 +167,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Edit User information</h1>
+            <h1 class="m-0">Add A New User</h1>
           </div><!-- /.col -->
            
         </div><!-- /.row -->
@@ -196,21 +196,26 @@
                   {%csrf_token%}
                   <div class="form-group">
                     <label for="exampleInputEmail1">First Name</label> 
-                    <input type="text" required name="city" class="form-control" value="{{form.city}}" >
-                    
+                    {{form.first_name}}
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label> 
+                    {{form.password1}}
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Confirm Password</label> 
+                    {{form.password2}}
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Last Name</label> 
-                    <input type="text" required name="city" class="form-control" value="{{form.last_name}}" >
-                    
+                    {{form.last_name}}
                   </div>
 
                   <div class="form-group">
                     <label for="exampleInputPassword1">User Name</label> 
-                    <input type="text" required name="city" class="form-control" value="{{form.username}}" >
-                    
+                    {{form.username}}
                   </div>
-                  
+
                   <div class="form-group">
                   <label>Date masks:</label>
 
@@ -218,68 +223,60 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                     </div>
-                    <input type="text" name="date_of_hire" value="{{form.date_of_hire}}"class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                    <input type="text" name="date_of_hire" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                   </div>
                   <!-- /.input group -->
                 </div>
 
                   <div class="form-group">
                     <label for="exampleInputPassword1">Phone</label> 
-                    <input type="text" required name="city" class="form-control" value="{{form.phone_number}}" >
-                    
+                    {{form.phone_number}}
                   </div>
 
                   <div class="form-group">
-                    <label for="exampleInputPassword1">address</label>
-                    <input type="text" required name="city" class="form-control" value="{{form.address}}" > 
-                    
+                    <label for="exampleInputPassword1">address</label> 
+                    {{form.address}} 
                   </div>
 
                   <div class="form-group">
                     <label for="exampleInputPassword1">city</label> 
-                    <input type="text" required name="city" class="form-control" value="{{form.city}}" >
-                    
+                    {{form.city}}
                   </div>
 
                   <div class="form-group">
                     <label for="exampleInputPassword1">position</label> 
-                    {{branch.user_type}}                    
+                    {{form.user_type}}
                   </div>
-
 
                   <div class="form-group row">
                     <label class="col-form-label col-lg-3">Branch</label>
-                    <{{branch.office_branch}}
-                    
+                    {{form.office_branch}}
                   </div>
 
                   <div class="form-group">
                     <label for="exampleInputPassword1">qualification_document</label> 
-                    <input type="text" required name="city" class="form-control" value="{{form.qualification_document.name}}" >
-                    
+                    {{form.qualification_document}}
                   </div>
 
                   <div class="form-group">
                     <label for="exampleInputPassword1">Photo Graph</label> 
-                    <input type="text" required name="city" class="form-control" value="{{form.photograph.name}}" >
-                    
+                    {{form.photograph}}
                   </div>
 
                   <div class="form-group">
                     <label for="exampleInputPassword1">identification</label> 
-                    <input type="text" required name="city" class="form-control" value="{{form.identification.name}}" >
-                    
+                    {{form.identification}}
                   </div>
 
                   
                   </div>
-                  <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
+
                 </div>
                 <!-- /.card-body -->
 
-                
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
               </form>
          </div>       
          </div>

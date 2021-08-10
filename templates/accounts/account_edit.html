@@ -167,7 +167,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Add A New User</h1>
+            <h1 class="m-0">Edit User information</h1>
           </div><!-- /.col -->
            
         </div><!-- /.row -->
@@ -196,87 +196,131 @@
                   {%csrf_token%}
                   <div class="form-group">
                     <label for="exampleInputEmail1">First Name</label> 
-                    {{form.first_name}}
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label> 
-                    {{form.password1}}
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Confirm Password</label> 
-                    {{form.password2}}
+                    <input type="text" required name="first_name" class="form-control" value="{{form.first_name}}" >
+                    
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Last Name</label> 
-                    {{form.last_name}}
+                    <input type="text" required name="last_name" class="form-control" value="{{form.last_name}}" >
+                    
                   </div>
 
                   <div class="form-group">
                     <label for="exampleInputPassword1">User Name</label> 
-                    {{form.username}}
+                    <input type="text" required name="username" class="form-control" value="{{form.username}}" >
+                    
                   </div>
-
-                  <div class="form-group">
-                  <label>Date masks:</label>
-
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                    </div>
-                    <input type="text" name="date_of_hire" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
-                  </div>
-                  <!-- /.input group -->
-                </div>
+                  
 
                   <div class="form-group">
                     <label for="exampleInputPassword1">Phone</label> 
-                    {{form.phone_number}}
+                    <input type="text" required name="phone_number" class="form-control" value="{{form.phone_number}}" >
+                    
                   </div>
 
                   <div class="form-group">
-                    <label for="exampleInputPassword1">address</label> 
-                    {{form.address}}
+                    <label for="exampleInputPassword1">address</label>
+                    <input type="text" required name="address" class="form-control" value="{{form.address}}" > 
+                    
                   </div>
 
                   <div class="form-group">
                     <label for="exampleInputPassword1">city</label> 
-                    {{form.city}}
+                    <input type="text" required name="city" class="form-control" value="{{form.city}}" >
+                    
+                  </div>
+
+
+                  <div class="form-group"> 
+                      <label> Position</label> 
+                      <select required name="user_type" class="form-control form-control-uniform" data-fouc>
+                        {%if form.is_auditor %}
+                        <option value="is_auditor">is_auditor</option>
+                        <option value="is_manager">is_manager</option>
+                        <option value="is_customer_service">is_customer_service</option>
+                        <option value="is_system_admin">is_system_admin</option>
+                        {%endif%}
+                        {%if form.is_manager %}
+                        <option value="is_manager">is_manager</option>
+                        <option value="is_auditor">is_auditor</option>
+                        <option value="is_customer_service">is_customer_service</option>
+                        <option value="is_system_admin">is_system_admin</option>
+                        {%endif%}
+                        {%if form.is_customer_service %}
+                        <option value="is_customer_service">is_customer_service</option>
+                        <option value="is_auditor">is_auditor</option>
+                        <option value="is_manager">is_manager</option>
+                        <option value="is_system_admin">is_system_admin</option>
+                        {%endif%}
+                        {%if form.is_system_admin %}
+                        <option value="is_system_admin">is_system_admin</option>
+                        <option value="is_auditor">is_auditor</option>
+                        <option value="is_manager">is_manager</option>
+                        <option value="is_customer_service">is_customer_service</option>
+                        {%endif%}
+                        
+                      </select>
+             
+                </div>
+
+                   <div class="form-group"> 
+                      <label> Branch</label> 
+                      <select required name="office_branch" class="form-control form-control-uniform" data-fouc>
+                        <option value="{{form.office_branch}}">{{form.office_branch}}</option>
+                          {%for name in branchs%}
+                            {%if name.name == form.office_branch %}
+                            {%else%}
+                            <option value="{{name}}">{{name}}</option>
+                            {%endif%}
+                          {%endfor%}
+                      </select>
                   </div>
 
                   <div class="form-group">
-                    <label for="exampleInputPassword1">position</label> 
-                    {{form.user_type}}
-                  </div>
+                    <label for="exampleInputPassword1">Current Document</label> 
+                    <img class="card-img img-fluid" src="{{form.qualification_document.url}}" width="250" height="200" alt="">
+                    
+                      <div class="form-group row">
+                      <label class="col-form-label col-lg-3">Change images:</label>
+                      <div class="col-lg-9">
+                          <input  type="file"  name="qualification_document" >
+                      </div>
+                    </div>
+                  </div> 
 
-                  <div class="form-group row">
-                    <label class="col-form-label col-lg-3">Branch</label>
-                    {{form.office_branch}}
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Current photograph </label> 
+                    <img class="card-img img-fluid" src="{{form.photograph.url}}" width="250" height="200" alt="">
+                    
+                      <div class="form-group row">
+                      <label class="col-form-label col-lg-3">Change images:</label>
+                      <div class="col-lg-9">
+                          <input  type="file"  name="photograph" >
+                      </div>
+                    </div>
                   </div>
 
                   <div class="form-group">
-                    <label for="exampleInputPassword1">qualification_document</label> 
-                    {{form.qualification_document}}
-                  </div>
-
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Photo Graph</label> 
-                    {{form.photograph}}
-                  </div>
-
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">identification</label> 
-                    {{form.identification}}
+                    <label for="exampleInputPassword1">Current Identification</label> 
+                    <img class="card-img img-fluid" src="{{form.identification.url}}" width="250" height="200" alt="">
+                    
+                      <div class="form-group row">
+                      <label class="col-form-label col-lg-3">Change images:</label>
+                      <div class="col-lg-9">
+                          <input  type="file"  name="identification" >
+                      </div>
+                    </div>
                   </div>
 
                   
                   </div>
-
+                  <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
                 </div>
                 <!-- /.card-body -->
 
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
+                
               </form>
          </div>       
          </div>

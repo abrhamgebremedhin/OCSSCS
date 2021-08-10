@@ -11,7 +11,7 @@ from django.utils.translation import gettext as _
 from django.contrib.admin.forms import AdminAuthenticationForm
 
 from django_summernote.widgets import SummernoteWidget
-from .models import User
+from .models import User,Customer,SavingType,BankingHistory
 from branchs.models import OCSSC_branch_office
 # from accounts.models import Company, CompanyAdmin, Customer
 # from company.models import CompanyStaff
@@ -57,20 +57,79 @@ class AbstractUserCreationForm(forms.ModelForm):
             raise forms.ValidationError("Passwords don't match")
         return password2
  
-class UserCreationUpdateForm(AbstractUserCreationForm):
+class UserCreationUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('office_branch','first_name','last_name',
+            'phone_number','address','city','office_branch',)
+     
+class TransactForm(forms.ModelForm):
+
+    transaction = forms.ChoiceField(required=True,
+                          widget=forms.Select(attrs={'type': 'select', "class": "form-control form-control-uniform"}),
+                          choices=(('Deposit', 'Deposit'), ('Withdrow', 'Withdrow'), ))
+
+    class Meta:
+        model = BankingHistory
+        fields = ('amount','transaction')
+        
+
+class SavingsTypeForm(forms.ModelForm):
+
+    class Meta:
+        model = SavingType
+        fields = ('name','detail')
+ 
+        widgets = {
+        'name' : forms.TextInput(attrs={"class":"form-control","placeholder":"Name",},),
+        'detail' : forms.TextInput(attrs={"class":"form-control","placeholder":"Discription",},),
+        }
+
+
+class CustomerForm(forms.ModelForm):
     office_branch = forms.ModelChoiceField(
         empty_label="Select Category",
         queryset=OCSSC_branch_office.objects.all(),
         widget=forms.Select(attrs={'class':'form-control form-control-uniform'}),
         required=True)
-    user_type = forms.ChoiceField(required=True,
-                      widget=forms.Select(attrs={'type': 'select', "class": "form-control form-control-uniform"}),
-                      choices=(('is_manager', 'is_manager'), ('is_auditor', 'is_auditor'), 
-                        ('is_customer_service', 'is_customer_service'), ('is_system_admin', 'is_system_admin'),))
-    class Meta(AbstractUserCreationForm.Meta):
-        model = User
-        fields = ('office_branch','user_type' )
+    savings_type = forms.ModelChoiceField(
+        empty_label="Select Category",
+        queryset=SavingType.objects.all(),
+        widget=forms.Select(attrs={'class':'form-control form-control-uniform'}),
+        required=True)
 
+    class Meta:
+        model = Customer
+        fields = ('first_name','middle_name','last_name','account_number','savings_type',
+                'phone_number','address','city','office_branch','initial_deposit',
+                'document','photograph','identification')
+ 
+        widgets = {
+        'first_name' : forms.TextInput(attrs={"class":"form-control","placeholder":"First Name",},),
+        'middle_name' : forms.TextInput(attrs={"class":"form-control","placeholder":"Middle Name",},),
+        'last_name' : forms.TextInput(attrs={"class":"form-control","placeholder":"Last Name",},),
+        'account_number':forms.TextInput(attrs={"class":"form-control","placeholder":"Savings Account","id":"Account",},),
+        'phone_number':forms.TextInput(attrs={"class":"form-control","placeholder":"Phone number",},),
+        'address':forms.TextInput(attrs={"class":"form-control","placeholder":"Address",},),
+        'city': forms.TextInput(attrs={"class":"form-control","placeholder":"City",},),
+        }
+
+class CustomerEditForm(forms.ModelForm):
+
+    class Meta:
+        model = Customer
+        fields = ('first_name','middle_name','last_name',
+                'phone_number','address','city',)
+                
+ 
+        widgets = {
+        'first_name' : forms.TextInput(attrs={"class":"form-control","placeholder":"First Name",},),
+        'middle_name' : forms.TextInput(attrs={"class":"form-control","placeholder":"Middle Name",},),
+        'last_name' : forms.TextInput(attrs={"class":"form-control","placeholder":"Last Name",},),
+        'phone_number':forms.TextInput(attrs={"class":"form-control","placeholder":"Phone number",},),
+        'address':forms.TextInput(attrs={"class":"form-control","placeholder":"Address",},),
+        'city': forms.TextInput(attrs={"class":"form-control","placeholder":"City",},),
+        }
 
 
 
@@ -100,7 +159,7 @@ class UserCreationForm(AbstractUserCreationForm):
     class Meta(AbstractUserCreationForm.Meta):
         model = User
         fields = ('first_name', 'last_name','username' ,'phone_number',  
-                    'photograph','identification','address','city',
+                    'photograph','identification','address','city','office_branch',
                     'qualification_document','date_of_hire')
         widgets = {
             'first_name': forms.TextInput(attrs={"class":"form-control","placeholder": "First Name", },),
