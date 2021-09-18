@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% block extrastyle %}
 {% endblock %}
-{%load crispy_forms_tags %}
-{%block title%} OCSSC | Branch| List {%endblock%}
+{%block title%}OCSSC | Loan Type |List {%endblock%}
     <!-- /.content -->
 {%block content%}
 
@@ -11,7 +10,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">List of Branches</h1>
+            <h1 class="m-0">List of Loan Type</h1>
           </div><!-- /.col -->
           
         </div><!-- /.row -->
@@ -30,7 +29,7 @@
                    <div class="card">
                       <div class="card-header">
                             <div class="header-elements" align="left">
-                            <a href="{% url 'Branch_create' %}" class="btn btn-success">Add a Branch</a> 
+                            <a href="{% url 'loan_type_create' %}" class="btn btn-success">Add a Loan Type</a> 
                             
                             </div>
                         </div>
@@ -43,42 +42,32 @@
                           <thead>
                           <tr>
                             <th>Name</th>
-                            <th>City</th>
-                            <th>Address</th>
-                            <th>Head Office</th>
-                            <th>Manager</th>
-                            <th>Created By</th>
+                            <th>Detail</th>
+                            <th>Date</th>
                             <th>Edit</th>
                             <th>Delete</th>
                           </tr>
                           </thead>
                           <tbody>
-                            {%for form in branch_list%}
+                            {% for type in types%}
                           <tr>
-                            <td>{{form.name}}</td>
-                            <td>{{form.city}}</td>
-                            <td>{{form.address}}</td>
-                            <td>{{form.head_office}}</td>
-                            <td>{{form.manager}}</td>                            
-                            <td>{{form.created_by}}</td>
-                            <td>
-                              <a href="{% url 'Branch_edit' id=form.id%}" class="btn btn-block btn-outline-primary btn-sm">Edit</a> 
+                            <td>{{type.name}}</td>
+                            <td>{{type.detail|truncatewords:30}}</td>
+                            <td>{{type.date}}</td>
+                            <td> 
+                              <a href="{% url 'Loan_type_edit' id=type.id %}" type="button"  class="btn btn-block btn-outline-primary btn-sm">Edit</a>
                             </td>
                             <td>
-                              <a href="{% url 'Branch_delete' id=form.id %}" onclick="return confirm ('Are you sure you want to delete this ?')" class="btn btn-block btn-outline-danger btn-sm">Delete</a>
+                              <a href="{% url 'Loan_type_delete' id=type.id %}" type="button" onclick="return confirm ('Are you sure you want to delete this ?')"  class="btn btn-block btn-outline-danger btn-sm">Delete</a>
                             </td>
                           </tr>
-                            {%endfor%}
-                          
+                          {%endfor%}
                           </tbody>
                           <tfoot>
                           <tr>
                             <th>Name</th>
-                            <th>City</th>
-                            <th>Address</th>
-                            <th>Head Office</th>
-                            <th>Manager</th>
-                            <th>Created By</th>
+                            <th>Detail</th>
+                            <th>Date</th>
                             <th>Edit</th>
                             <th>Delete</th>
                           </tr>

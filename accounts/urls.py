@@ -1,12 +1,17 @@
 from django.urls import path,include
 
-from .views import (AccountList,AccountCreate,AccountEdit,AccountDelete,AccountSuspend,AccountDetail
+from .views import (LoginView,Accountnumber,AccountList,AccountCreate,AccountEdit,AccountDelete,AccountSuspend,AccountDetail
 					,CustomerList,CustomerCreate,CustomerDelete,CustomerDetail,CustomerEdit,Transact,Transaction_list,
                     SavingsType,SavingsTypeList,SavingsTypeDelete,)
                     
 
 urlpatterns = [ 
+
+    path("",include("django.contrib.auth.urls")),
+    path("user-login/",LoginView.as_view(),name="cm_login"),
+
     path('account_list',AccountList.as_view(),name='account'),
+    path('customer_create/account_number',Accountnumber.as_view(),name='account_number'),
     path('account_create',AccountCreate.as_view(),name='account_create'),
     path('account_edit/<id>',AccountEdit.as_view(),name='account_edit'),
     path('account_delete/<id>',AccountDelete.as_view(),name='account_delete'),
@@ -25,4 +30,5 @@ urlpatterns = [
 
     path('transact/<id>',Transact.as_view(),name='transact'),
     path('transact-list/',Transaction_list.as_view(),name='transaction_list'),
+    
     ]

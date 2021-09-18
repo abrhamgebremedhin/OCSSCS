@@ -56,12 +56,32 @@ class AbstractUserCreationForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("Passwords don't match")
         return password2
+
+    def clean_phone_number(self,*args,**kwargs):
+        phone_number = self.cleaned_data.get('phone_number')
+        if len(str(phone_number))!=12:
+            if '251' not in str(phone_number):
+                raise forms.ValidationError("please check your phone number")
+        else:
+            print("done")
+            return phone_number
  
 class UserCreationUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('office_branch','first_name','last_name',
             'phone_number','address','city','office_branch',)
+
+    def clean_phone_number(self,*args,**kwargs):
+        phone_number = self.cleaned_data.get('phone_number')
+        if len(str(phone_number))!=12:
+            if '251' not in str(phone_number):
+                raise forms.ValidationError("please check your phone number")
+        else:
+            print("done")
+            return phone_number
+        
+
      
 class TransactForm(forms.ModelForm):
 
@@ -82,7 +102,7 @@ class SavingsTypeForm(forms.ModelForm):
  
         widgets = {
         'name' : forms.TextInput(attrs={"class":"form-control","placeholder":"Name",},),
-        'detail' : forms.TextInput(attrs={"class":"form-control","placeholder":"Discription",},),
+        'detail' : forms.Textarea(attrs={"class":"form-control","placeholder":"Discription",},),
         }
 
 
@@ -114,6 +134,15 @@ class CustomerForm(forms.ModelForm):
         'city': forms.TextInput(attrs={"class":"form-control","placeholder":"City",},),
         }
 
+    def clean_phone_number(self,*args,**kwargs):
+        phone_number = self.cleaned_data.get('phone_number')
+        if len(str(phone_number))!=12:
+            if '251' not in str(phone_number):
+                raise forms.ValidationError("please check your phone number")
+        else:
+            print("done")
+            return phone_number
+
 class CustomerEditForm(forms.ModelForm):
 
     class Meta:
@@ -131,6 +160,15 @@ class CustomerEditForm(forms.ModelForm):
         'city': forms.TextInput(attrs={"class":"form-control","placeholder":"City",},),
         }
 
+    def clean_phone_number(self,*args,**kwargs):
+        phone_number = self.cleaned_data.get('phone_number')
+        if len(str(phone_number))!=12:
+            if '251' not in str(phone_number):
+                raise forms.ValidationError("please check your phone number")
+        else:
+            print("done")
+            return phone_number
+
 
 
 class UserCreationForm(AbstractUserCreationForm):
@@ -143,12 +181,12 @@ class UserCreationForm(AbstractUserCreationForm):
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(
         attrs={},
     ))
+
     office_branch = forms.ModelChoiceField(
         empty_label="Select Category",
         queryset=OCSSC_branch_office.objects.all(),
         widget=forms.Select(attrs={'class':'form-control form-control-uniform'}),
         required=True)
-
 
     user_type = forms.ChoiceField(required=True,
                               widget=forms.Select(attrs={'type': 'select', "class": "form-control form-control-uniform"}),
@@ -159,22 +197,33 @@ class UserCreationForm(AbstractUserCreationForm):
     class Meta(AbstractUserCreationForm.Meta):
         model = User
         fields = ('first_name', 'last_name','username' ,'phone_number',  
-                    'photograph','identification','address','city','office_branch',
-                    'qualification_document','date_of_hire')
+                    'photograph','identification','address','city',
+                    'office_branch','qualification_document','date_of_hire',)
         widgets = {
             'first_name': forms.TextInput(attrs={"class":"form-control","placeholder": "First Name", },),
             'last_name': forms.TextInput(attrs={"class":"form-control","placeholder": "Last Name"},),
             'username': forms.TextInput(attrs={"class":"form-control","placeholder": "User Name"},),
-            'phone_number': forms.TextInput(attrs={"class":"form-control","placeholder": "phone number", },),
+            'phone_number': forms.TextInput(attrs={"class":"form-control","placeholder": "+2519-------- ", },),
             'address':forms.TextInput(attrs={"class":"form-control","placeholder": "Address", },),
             'city':forms.TextInput(attrs={"class":"form-control","placeholder": "Ciry", },),
             'date_of_hire':forms.TextInput(attrs={"class":"form-control","placeholder": "First Name", },),
             }
 
+    def clean_phone_number(self,*args,**kwargs):
+        phone_number = self.cleaned_data.get('phone_number')
+        if len(str(phone_number))!=12:
+            if '251' not in str(phone_number):
+                raise forms.ValidationError("please check your phone number")
+        else:
+            print("done")
+            return phone_number
+
     @transaction.atomic
-    def save(self):
+    def save(self,created_by,date_of_hire):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data.get("password1"))
+        user.created_by = created_by
+        user.date_of_hire = date_of_hire
         if self.cleaned_data.get("user_type") == "is_manager":
             user.is_manager = True
             user.save()

@@ -1,17 +1,36 @@
 {% extends 'base.html' %}
 {% block extrastyle %} 
+<script
+        src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous">
+</script>
 
 <script type="text/javascript">
   
   function assigne() {
-    document.getElementById("Account").value = 1000064646464;
-}
+    
 
+    $.ajax({             url: 'account_number',
+              method:'get',
+              data:{button_text : $(this).text()
+
+              },
+              success:function(response){
+                if (response.account){
+                  document.getElementById("Account").value = response.account;
+                }
+                document.getElementById("send11").className = "btn btn-block btn-success btn-flat disabled";
+                
+                
+              }
+            });
+}
 </script>
 
  {% endblock %}
 {%load crispy_forms_tags %}
-{%block title%} OCSSC | Create {%endblock%}
+{%block title%} OCSSC | Customer| Create {%endblock%}
 
     <!-- /.content -->
 {%block content%}
@@ -75,7 +94,7 @@
                     <div class="col-md-10">
                       <div class="card-header">
                             <div class="header-elements" align="left">
-                            <a class="btn btn-block btn-success btn-flat" onclick="assigne()">Generate and Assigne</a> 
+                            <a id="send11"  class="btn btn-block btn-success btn-flat" onclick="assigne()">Generate and Assigne</a> 
                             </div>
                         </div>
                       </div>
@@ -144,6 +163,10 @@
  
          </div>
        </section>
+
+         <script>
+      
+  </script>
 
   {%endblock%}
 

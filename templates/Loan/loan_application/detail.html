@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% block extrastyle %} 
+
+ {% endblock %}
+{%load crispy_forms_tags %}
+{%block title%} OCSSC | Loan Application |Detail {%endblock%}
+
+    <!-- /.content -->
+{%block content%}
+    <!---------->
+        <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0"> Customer Loan Application</h1>
+          </div><!-- /.col -->
+           
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+      <section class="content">
+      <div class="container-fluid">
+
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-10">
+            <!-- general form elements -->
+            
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Full information of <b>{{form.customer.account_number}}</b></h3>
+              </div>
+
+              <div class="card card-primary card-outline" align="left"> 
+              <div class="card-body box-profile">
+                <div class="text-center">
+                  <img class="profile-user-img img-fluid img-circle"
+                       src="{{form.customer.photograph.url}}"
+                       alt="User profile picture">
+                </div>
+                
+
+                <h3 class="profile-username text-center">
+                    {{form.customer.first_name}} {{form.customer.middle_name}} {{form.customer.last_name}}</h3>
+
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+                  <div class="row">
+
+                      {%if user.is_manager%}
+                      {%if form.approved_by_Manager == False%}
+                     <div class="col-md-3">
+                      <div class="header-elements" align="left">
+                      
+                      <a href="{% url 'loan_application_manager' id=form.id %}" type="button" onclick="return confirm ('if you agree to approve this loan as an Manager you will be mentioned in the recorded ')" class="btn btn-success">Final Approval </a>
+                      </div>
+                      </div>
+                      {%endif%}
+                      {%endif%}
+
+                      {%if user.is_manager%}
+                      {%if form.approved_by_Manager == True%}
+                     <div class="col-md-3">
+                      <div class="header-elements" align="left">
+                      
+                      <a href="{% url 'loan_application_unmanager' id=form.id %}" type="button" onclick="return confirm ('if you agree to approve this loan as an un-Manager you will be mentioned in the recorded ')" class="btn btn-success">Revoke Approval </a>
+                      </div>
+                      </div>
+                      {%endif%}
+                      {%endif%}
+
+                    <div class="col-md-6">
+                    </div>
+                      {%if user.is_auditor %}
+                      {%if form.approved_by_Auditor == False%}
+
+                    <div class="col-md-3">
+                      <div class="header-elements" align="right">
+                      
+                      <a href="{% url 'Loan_application_auditor' id=form.id %}" type="button" onclick="return confirm ('if you agree to approve this loan as an Auditor you will be mentioned in the recorded ')" class="btn btn-success">Approve Request</a>
+                      </div>
+                      
+                  </div>
+                      {%endif%}
+                      {%endif%}
+
+                      {%if user.is_auditor %}
+                      {%if form.approved_by_Auditor == True%}
+
+                  <div class="col-md-3">
+                      <div class="header-elements" align="right">
+                      
+                      <a href="{% url 'Loan_application_unauditor' id=form.id %}" type="button" onclick="return confirm ('if you agree to unapprove this loan as an Auditor you will be mentioned in the recorded ')" class="btn btn-secondary">Revoke Approval</a>
+                      </div>
+                      
+                  </div>
+                      {%endif%}
+                      {%endif%}
+                </div>
+
+                <div class="card-body">
+
+
+                <div class="row mb-3">
+                        <div class="col-sm-6">
+
+                <strong> Crated by</strong>
+                <p class="text-muted">
+                    {{form.create_by}} in the branch of {{form.customer.office_branch}}
+                </p>
+
+                <hr>
+
+                <strong> Financial Aid Requested </strong>
+
+                <p class="text-muted">
+                    {{form.Financial_aid_required}}
+                </p>
+
+                <hr>
+
+                <strong>Date of Loan Request </strong>
+
+                <p class="text-muted">
+                    {{form.date}}
+                </p>
+
+                <hr>
+
+                <strong> Business plan</strong>
+
+                <p class="text-muted">
+                    <img class="img-fluid" src="{{form.business_plane.url}}" alt="Document">
+                    
+                </p>
+
+                <hr>
+              </div>
+
+              <div class="col-sm-6">
+                <strong> Status of the request</strong>
+
+                <p class="text-muted">
+                    {{form.status}}
+                </p>
+
+                <hr>
+                <strong> Loan Type</strong>
+
+                <p class="text-muted">
+                    {{form.loan_type}}
+                </p>
+                <hr>
+
+                <strong> Current Deposited Money</strong>
+
+                <p class="text-muted">
+                    {{form.customer.initial_deposit}}
+                </p>
+
+                <hr>
+                
+                <strong> Current Financial Information </strong>
+
+                <p >
+                  <img class="img-fluid" src="{{form.current_financial_info.url}}" alt="identification">
+                    
+                </p>
+
+
+
+                </div>
+                <hr>
+                <p>Other documents</p>
+                <hr>
+                {% for doc in form.document %}
+
+                <div class="col-md-2" style="padding-left: 10px;">    
+                  <div class = "row">
+                    <a href="{{doc.image.url}}" target="_blank" download="{{doc.image.url}}" data-popup="lightbox" rel="group">
+                      <i  style = "color: rgb(86, 115, 132); border: hidden; size: 200px; " class = "fa fa-image fa-4x"></i>
+                       
+                    </a>
+                  </div>
+
+                    
+                </div>
+                {%endfor%}
+            </div>
+
+              </div>
+              
+              </div>
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                </div>
+            </div>
+        </div>
+ 
+         </div>
+       </section>
+
+  {%endblock%}
+
+                
+
+
+<!---------->
+  <!-- /.content-wrapper -->
+
+
+<!-- ./wrapper -->
+

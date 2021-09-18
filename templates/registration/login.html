@@ -1,0 +1,48 @@
+
+{% extends 'nonuser_base.html' %}
+{% block extrastyle %}
+{% endblock %}
+{%block title%} OCSSC | LOGIN {%endblock%}
+{%load crispy_forms_tags%}  
+{%block content%} 
+		<!--Sliders Section-->
+		<section>
+			<div class="bannerimg cover-image bg-background3" >
+				<div class="header-text mb-0">
+					<div class="container">
+						<div class="text-center text-white">
+							<h1 class="">Login</h1>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--/Sliders Section-->
+
+		<!--Login-Section-->
+		<section class="sptb">
+			<div class="container customerpage">
+				<div class="row">
+					<div class="single-page" >
+						<div class="col-lg-8 col-xl-8 col-md-8 d-block mx-auto">
+							<div class="wrapper wrapper2">
+								<hr class="divider">
+								<form id="login" class="card-body" action="{%url 'cm_login' %}" method="POST" tabindex="500">
+									{%csrf_token%}
+									{{form|crispy}}
+									<div class="submit">
+										<button class="btn btn-secondary btn-block" type="submit">Login</button>
+									</div>
+									<p class="mb-2"><a href="" >Forgot Password</a></p>
+									<p class="text-dark mb-0">Don't have account?<a href="" class="text-secondary ml-1">Sign UP</a></p>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--/Login-Section-->
+
+		<!--/Newsletter-->
+{%endblock%}

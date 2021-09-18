@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block extrastyle %}
 {% endblock %}
-{%block title%} OCSSC | User | Home {%endblock%}
+{%block title%} OCSSC | Account| List {%endblock%}
     <!-- /.content -->
 {%block content%}
 
@@ -44,15 +44,16 @@
                           <thead>
                           <tr>
                             <th>name</th>
-                            <th>Active</th>
+                            <th>user name</th>
                             <th>city</th>
                             <th>office_branch</th>
                             <th>User Type</th>
 
-                            <th>Date of hire</th>  
+                            <th>Date of hire</th> 
+                            <th>Created Date</th>  
                             <th>Edit</th>
-                            <th>Details</th>
                             <th>Suspend</th>
+                            <th>Details</th>
                             <th>Delete</th>
                           </tr>
                           </thead>
@@ -61,7 +62,7 @@
                             {%for form in accounts%}
                           <tr>
                             <th>{{form.first_name}} {{form.last_name}}</th>
-                            <th>{{form.active}}</th>
+                            <th>{{form.username}}</th>
                             <th>{{form.city}}</th>
 
                             <th>{{form.office_branch}}</th>
@@ -84,6 +85,7 @@
 
 
                             <th>{{form.date_of_hire}}</th>
+                            <th>{{form.created_date}}</th>
                             
                             <td>
                               <a href="{% url 'account_edit' id=form.id %}" type="button" class="btn btn-block btn-outline-primary btn-sm">Edit</a>
@@ -112,16 +114,17 @@
                           </tbody>
                           <tfoot>
                           <tr>
-                             <th>name</th>
-                             <th>Active</th>
+                            <th>name</th>
+                            <th>user name</th>
                             <th>city</th>
                             <th>office_branch</th>
                             <th>User Type</th>
 
-                            <th>Date of hire</th>  
+                            <th>Date of hire</th> 
+                            <th>Created Date</th>  
                             <th>Edit</th>
-                            <th>Details</th>
                             <th>Suspend</th>
+                            <th>Details</th>
                             <th>Delete</th>
                           </tr>
                           </tfoot>

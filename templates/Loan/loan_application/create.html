@@ -1,29 +1,13 @@
 {% extends 'base.html' %}
 {% block extrastyle %} 
-
-
-  <!-- daterange picker -->
-  <link rel="stylesheet" href="/static/plugins/daterangepicker/daterangepicker.css">
-  
-
-
 <!-- jQuery -->
 <script src="/static/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="/static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- Select2 -->
-<script src="/static/plugins/select2/js/select2.full.min.js"></script>
-<!-- Bootstrap4 Duallistbox -->
-<script src="/static/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
-<!-- InputMask -->
-<script src="/static/plugins/moment/moment.min.js"></script>
-<script src="/static/plugins/inputmask/jquery.inputmask.min.js"></script>
-<!-- date-range-picker -->
-<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
 
  {% endblock %}
 {%load crispy_forms_tags %}
-{%block title%} OCSSC |Savings Type| Create {%endblock%}
+{%block title%} OCSSC | Loan Application |Create {%endblock%}
 /.content -->
 {%block content%}
     <!---------->
@@ -32,7 +16,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Add New Savings Type</h1>
+            <h1 class="m-0">Add New Loan Request</h1>
           </div><!-- /.col -->
            
         </div><!-- /.row -->
@@ -48,11 +32,11 @@
          <div class="card"> 
             
               <div class="card-header">
-                <h3 class="card-title">Savings Type</h3>
+                <h3 class="card-title">Loan Application</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form action="" method="post">
+              <form action="" method="post" enctype="multipart/form-data">
                 <div class="card-body">
                   {%if form.errors%}
                     <div class="alert alert-danger" role="alert">
@@ -61,14 +45,34 @@
                   {% endif %}                                                       
                 {%csrf_token%}
                   <div class="form-group">
-                    <label for="exampleInputPassword1">NAME</label>
-                    {{form.name}}
+                    <label for="">Loan Type :</label>
+                    {{form.loan_type}}
                   </div>
 
                   <div class="form-group">
-                    <label for="exampleInputPassword1">Discription</label>
-                    {{form.detail}}
+                    <label for="">Amount of finicial aid being requested (amount in amount) :</label>
+                    {{form.Financial_aid_required}}
                   </div>
+
+                  <div class="form-group">
+                    <label for="">Current Finincail Information :</label>
+                    {{form.current_financial_info}}
+                  </div>
+
+                  <div class="form-group">
+                    <label for="">Business Plan :</label>
+                    {{form.business_plane}}
+                  </div>
+
+                  <div class="form-group row">
+                    <label class="col-form-label col-lg-3">Additional  Files (You can select multiple files ):</label>
+                    <div class="col-lg-9">
+                      <div class="uniform-uploader">
+                        <input type="file" id="files" name="images" class="form-input-styled" data-fouc="" multiple/>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
                 <!-- /.card-body -->
 

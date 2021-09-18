@@ -1,15 +1,28 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.views import View 
+import datetime
+from time import time
+
+from django.http import JsonResponse
+from django.contrib import messages
+from django.contrib.auth import views as auth_views
 from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from branchs.models import OCSSC_branch_office
-from .models import User,Customer,SavingType,BankingHistory
-from .forms import (UserCreationForm,AbstractUserCreationForm,
+from .models import User,Customer,SavingType,BankingHistory,AccountNumber
+from loan.models import Loan_processing
+from .forms import (FrontLoginForm,UserCreationForm,AbstractUserCreationForm,
 				UserCreationUpdateForm,CustomerForm,CustomerEditForm,SavingsTypeForm
 				,TransactForm)
-# Create your views here.
 
-class Transact(View):
+# Login view for the front end/customer user
+class LoginView(auth_views.LoginView):
+    form_class = FrontLoginForm
+    template_name = 'registration/login.html'
+
+
+class Transact(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		customer = Customer.objects.get(id=self.kwargs['id'])
 		form= TransactForm()
@@ -23,37 +36,38 @@ class Transact(View):
 		if form.is_valid():
 			if(form.cleaned_data.get('transaction') == "Deposit"):
 				final_value = float(customer.initial_deposit)+float(form.cleaned_data.get('amount'))
-				print("Deposited")
+				print(final_value)
+				print("Deposited") 
 			if(form.cleaned_data.get('transaction') == "Withdrow"):
 				final_value = float(customer.initial_deposit)-float(form.cleaned_data.get('amount'))
+				print(final_value)
 				print("Withdraw")
 			transact =BankingHistory( customer = customer,
 					 	initial_value = customer.initial_deposit,
 					 	 amount = form.cleaned_data.get('amount'),
 					 	 final_value = final_value ,
-					 	 transaction = form.cleaned_data.get('transaction'))
+					 	 transaction = form.cleaned_data.get('transaction'),
+					 	 transation_handler = self.request.user)
 			transact.save()
-			customer.initial_value = final_value
+			print("1")
+			customer.initial_deposit = final_value
+			print("2")
 			customer.save()
 			return redirect("transaction_list")
-
-class Transaction_list(View):
+class Transaction_list(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		transact = BankingHistory.objects.all()
 		context = {"banking":transact}
 		template_name = "Transact/list.html"
 		return render(self.request, template_name, context)
 
-
-
-class SavingsTypeDelete(View):
+class SavingsTypeDelete(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		savings = SavingType.objects.get(id=self.kwargs['id'])
 		savings.delete()
 		print("Deleted Savings Type")
 		return redirect('savings')
-
-class SavingsType(View):
+class SavingsType(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		form = SavingsTypeForm()
 		context = {"form":form}
@@ -68,27 +82,42 @@ class SavingsType(View):
 		template_name = "savings/create.html"
 		return render(self.request, template_name,context)
 
-
-class SavingsTypeList(View):
+class SavingsTypeList(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		savings = SavingType.objects.all()
 		context = {"savings":savings}
 		template_name = "savings/list.html"
 		return render(self.request, template_name,context)
-
-class CustomerList(View):
+class CustomerList(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		customer = Customer.objects.all()
+		print(self.request.user.username)
 		context = {"Customers":customer}
 		template_name = "accounts/customer_list.html"
 		return render(self.request, template_name,context)
-class CustomerDetail(View):
+
+class CustomerDetail(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
-		customer = Customer.objects.get(id=self.kwargs['id'])
-		context = {"form":customer}
+		try:
+			customer = Customer.objects.get(id=self.kwargs['id'])
+		except Customer.DoesNotExist:
+			customer = None
+		try:
+			test = Loan_processing.objects.get(customer=customer)
+		except Loan_processing.DoesNotExist:
+			test = None
+		if test != None:
+			loan = True
+		else:
+			loan = False
+		try:
+			transact = BankingHistory.objects.filter(customer=customer)
+		except BankingHistory.DoesNotExist:
+			transact = None
+		context = {"form":customer,"loan":loan,"banking":transact}
 		template_name = "accounts/customer_detail.html"
 		return render(self.request,template_name,context)
-class CustomerEdit(View):
+class CustomerEdit(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		customer = Customer.objects.get(id=self.kwargs['id'])
 		branchs = OCSSC_branch_office.objects.all()
@@ -123,13 +152,13 @@ class CustomerEdit(View):
 		template_name = "accounts/customer_edit.html"
 		return render(self.request,template_name,context)
 
-class CustomerDelete(View):
+class CustomerDelete(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		customer = Customer.objects.get(id=self.kwargs['id'])
 		customer.delete()
 		print("Deleted customer")
 		return redirect('customer')
-class CustomerCreate(View):
+class CustomerCreate(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		Customer = CustomerForm()
 		template_name = "accounts/customer_create.html"
@@ -151,25 +180,28 @@ class CustomerCreate(View):
 				savings_type = customer.cleaned_data.get('savings_type'),
 				city =   customer.cleaned_data.get('city'),
 				office_branch =   customer.cleaned_data.get('office_branch'),
-				active =    True )
+				active =    True,
+				created_by = self.request.user )
 			MainCustomer.save()
 			return redirect("customer")
 
 		template_name = "accounts/customer_create.html"
 		context = {"form":customer}
 		return render(self.request,template_name,context)
-class AccountList(View):
+
+class AccountList(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		accounts = User.objects.all()
 		context = {"accounts":accounts}
 		template_name = "accounts/account_list.html"
 		return render(self.request, template_name,context)
-class AccountDelete(View):
+class AccountDelete(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		account = User.objects.get(id=self.kwargs['id'])
 		account.delete()
 		return redirect("account") 
-class AccountSuspend(View):
+
+class AccountSuspend(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		account = User.objects.get(id=self.kwargs['id'])
 		print("--------") 
@@ -184,14 +216,14 @@ class AccountSuspend(View):
 			account.save()
 			print("Print - 1 change")
 		return redirect("account")
-class AccountDetail(View):
+class AccountDetail(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		account = User.objects.get(id=self.kwargs['id'])
-		context = {"form":account}
+		context = {"form":account,"detail":True}
 		template_name = "accounts/account_create.html"
 		return render(self.request, template_name, context)
 
-class AccountEdit(View):
+class AccountEdit(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		accounts=User.objects.get(id=self.kwargs['id']) 
 		branchs = OCSSC_branch_office.objects.all()
@@ -215,25 +247,21 @@ class AccountEdit(View):
 			accounts.office_branch = form.cleaned_data.get('office_branch')
 			if(user_type == "is_manager"):
 				accounts.is_manager = True
-
 				accounts.is_auditor = False
 				accounts.is_customer_service = False
 				accounts.is_system_admin = False
 			if(user_type == "is_auditor"):
 				accounts.is_auditor = True
-
 				accounts.is_manager = False
 				accounts.is_customer_service = False
 				accounts.is_system_admin = False
 			if(user_type == "is_customer_service"):
 				accounts.is_customer_service = True
-
 				accounts.is_auditor = False
 				accounts.is_manager = False
 				accounts.is_system_admin = False
 			if(user_type == "is_system_admin"):
 				accounts.is_system_admin = True
-
 				accounts.is_auditor = False
 				accounts.is_customer_service = False
 				accounts.is_manager = False
@@ -252,19 +280,45 @@ class AccountEdit(View):
 		template_name = "accounts/account_edit.html"
 		return render(self.request, template_name, context)
 
+class Accountnumber(LoginRequiredMixin,View):
+	def get_number(self):
+		num = AccountNumber.objects.get(id=1)
+		return num.accounts
 
+	def post_number(self):
+		num = AccountNumber.objects.get(id=1)
+		num.accounts = 1+num.accounts
+		num.save()
+		print("accounts is at "+str(num.accounts))
+		return num.accounts
 
-class AccountCreate(View):
+	def get(self,*args,**kwargs):
+		print("J working")
+
+		if self.request.is_ajax():
+			t = self.post_number()
+			print("============")
+			print(t)
+			t = 100000000+t
+			return JsonResponse({'account':t},status=200)
+
+class AccountCreate(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		form = UserCreationForm()
-		context = {"form":form}
+		context = {"form":form,"create":True}
 		template_name = "accounts/account_create.html"
 		return render(self.request, template_name, context)
 	def post(self,*args,**kwargs):
 		form = UserCreationForm(self.request.POST,self.request.FILES)
-		context = {"form":form}
+		context = {"form":form,"create":True}
 		template_name = "accounts/account_create.html"
 		if form.is_valid():
+			user = self.request.user
+			realDate = self.request.POST['date_of_hire']
+			realDate = datetime.datetime.strptime(realDate, '%d/%m/%Y').date()
+			print("-------------------------")
+			print(form.cleaned_data.get("phone_number"))
+			print("-------------------------")
 			print("is_valid")
 			if(form.cleaned_data.get('position') == "is_manager"):
 				is_manager=True
@@ -286,7 +340,7 @@ class AccountCreate(View):
 				is_auditor=False
 				is_customer_service=False
 				is_system_admin=True
-			user = form.save()
+			user = form.save(user,realDate)
 			return redirect("account")
 		print("is_not_valid")
 		return render(self.request, template_name,context)

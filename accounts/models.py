@@ -17,12 +17,12 @@ def create_auth_token(sender, instance = None, created = False, **kwargs):
         Token.objects.create(user = instance) 
 
 class User(AbstractUser):
-	phone_number = models.CharField(max_length=20,blank=True)
+
+	phone_number = models.IntegerField(blank=True,null=True)
 	photograph = models.ImageField(upload_to = "user/photograph",null=True)
 	identification = models.ImageField(upload_to = "user/Identification",null=True)
 	address = models.CharField(max_length=100,default="")
 	city = models.CharField(max_length=100,default="")
-	position = models.CharField(max_length=100,default="")
 	qualification_document = models.ImageField(upload_to = "user/Qualification",null=True)
 	#office_branch = models.CharField(max_length=100,null=False)
 	office_branch = models.ForeignKey(OCSSC_branch_office ,on_delete=models.CASCADE,null=True)
@@ -33,7 +33,8 @@ class User(AbstractUser):
 	active = models.BooleanField(default=False) 
 	date_of_hire = models.DateTimeField(null=True)
 	created_date = models.DateTimeField(auto_now_add=True)
-	# created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='Employee_created_by')
+	created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='Employee_created_by')
+
 class SavingType(models.Model):
 	name = models.CharField(max_length=100,default="")
 	detail = models.CharField(max_length=2000, default="")
@@ -42,6 +43,9 @@ class SavingType(models.Model):
 	def __str__(self):
 		return self.name
 
+class AccountNumber(models.Model):
+	accounts = models.IntegerField(blank=False,null=True)
+	date = models.DateTimeField(auto_now_add=True)
 
 class Customer(models.Model):
 	first_name = models.CharField(max_length=100,default="")
@@ -60,7 +64,7 @@ class Customer(models.Model):
 	active = models.BooleanField(default=False) 
 	initial_deposit = models.FloatField(null=False,default=0)
 	date = models.DateTimeField(auto_now_add=True)
-	#created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='Eustomer_created_by')
+	created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='Customer_created_by',default=1)
 
 	def __str__(self):
 		name = self.first_name+" "+self.middle_name+" "+self.last_name
@@ -73,7 +77,7 @@ class BankingHistory(models.Model):
 	final_value = models.FloatField(verbose_name=" ", max_length = 6, default=0) 
 	transaction = models.CharField(max_length=100)
 	date = models.DateTimeField(auto_now_add=True) 
-	#transation_handler = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='Transacted_by')
+	transation_handler = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='Transactaction_handled_by',default=1)
 
 
 

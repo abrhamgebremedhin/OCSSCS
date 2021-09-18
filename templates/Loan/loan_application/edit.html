@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block extrastyle %}  {% endblock %}
+{%load crispy_forms_tags %}
+{%block title%} OCSSC | Loan Application |Edit {%endblock%}
+
+    <!-- /.content -->
+{%block content%}
+    <!---------->
+        <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Edit Loan Application</h1>
+          </div><!-- /.col -->
+           
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+      <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          
+         <div class="col-lg-12">
+         <div class="card"> 
+                       
+              <div class="card-header">
+                <h3 class="card-title">Loan Application</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+
+              <form action="" method="POST" enctype="multipart/form-data">
+                <div class="card-body">
+                  {%if form.errors%}
+                    <div class="alert alert-danger" role="alert">
+                      {{form.errors}}
+                    </div>
+                  {% endif %}
+                  {%csrf_token%}
+                  <div class="form-group"> 
+                  <label> Loan Type</label>
+                    <select required name="loan_type" class="form-control form-control-uniform" data-fouc>
+                      <option value="{{form.loan_type.id}}">{{form.loan_type}}</option>
+                        {%for name in Loan_type%}
+                          {%if name == form.loan_type %}
+                          {%else%}
+                          <option value="{{name.id}}">{{name}}</option>
+                          {%endif%}
+                        {%endfor%}
+                       
+                    </select>
+             
+                </div>
+                  <div class="form-group">
+                    <label >Financial Aid Requested</label>
+                    <input type="text" required name="Financial_aid_required" class="form-control" value="{{form.Financial_aid_required}}" >
+                        
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Current Business Plane</label> 
+                    <img class="img-fluid" src="{{form.business_plane.url}}" alt="Documnet">
+                    
+                      
+                  </div>
+
+                  <div class="form-group row">
+                      <label class="col-form-label col-lg-3">Change Business Plane:</label>
+                      <div class="col-lg-9">
+                          <input  type="file"  name="business_plane" >
+                      </div>
+                    </div>
+
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Current Financial info </label> 
+                    <img class="img-fluid" src="{{form.current_financial_info.url}}" alt="Documnet">
+                    
+                      
+                  </div>
+
+                  <div class="form-group row">
+                      <label class="col-form-label col-lg-3">Change Financial info:</label>
+                      <div class="col-lg-9">
+                          <input  type="file"  name="current_financial_info" >
+                      </div>
+                    </div>
+
+                  <div class="form-group row">
+                    <label class="col-form-label col-lg-3">Additional  Files (You can select multiple files ):</label>
+                    <div class="col-lg-9">
+                      <div class="uniform-uploader">
+                        <input type="file" id="files" name="images" class="form-input-styled" data-fouc="" multiple/>
+                      </div>
+                    </div>
+                  </div>
+
+                
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+         </div>       
+         </div>
+         </div>
+ 
+         </div>
+       </section>
+  {%endblock%}
+
+                
+
+
+<!---------->
+  <!-- /.content-wrapper -->
+
+
+<!-- ./wrapper -->
+

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views import View 
 from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .forms import BranchForm
 from .models import OCSSC_branch_office
 from accounts.models import User
@@ -8,14 +10,14 @@ from accounts.models import User
 
 
 
-class Home(View):
+class Home(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		template_name="branchs/list.html"
 		branchs = OCSSC_branch_office.objects.all()
 		context = {'branch_list':branchs}
 		return render(self.request, template_name,context)
 
-class Create(View):
+class Create(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		form = BranchForm()
 		template_name="branchs/create.html"
@@ -30,7 +32,7 @@ class Create(View):
 			return redirect("Branch")
 		#messages.error(self.request, "some thing went wrong")
 		return redirect("Branch_create")
-class Edit(View):
+class Edit(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		form = OCSSC_branch_office.objects.get(id=self.kwargs['id'])
 		user = User.objects.all()
@@ -58,7 +60,7 @@ class Edit(View):
 		context = {'form':form,"user":user}
 		return render(self.request, template_name, context)
 
-class Delete(View):
+class Delete(LoginRequiredMixin,View):
 	def get(self,*args,**kwargs):
 		branch = OCSSC_branch_office.objects.get(id=self.kwargs['id'])
 		branch.delete()

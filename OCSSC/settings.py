@@ -25,7 +25,7 @@ SECRET_KEY = 'a1)tr5w#f!wa5$2vgqli9ck4@xd$=%@y32@z=^ju41e%-r-)bq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','127.0.0.2']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'accounts',
     'branchs',
+    'loan',
 
     'crispy_forms',
     'rest_framework.authtoken',
@@ -134,4 +135,7 @@ STATICFILES_DIRS = (
 
 MEDIA_URL = '/media/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/uploads/')
+
+LOGIN_REDIRECT_URL = 'customer'
+LOGOUT_REDIRECT_URL = 'cm_login'
 

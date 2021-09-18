@@ -157,7 +157,7 @@
 </script>
  {% endblock %}
 {%load crispy_forms_tags %}
-{%block title%} OCSSC | Create {%endblock%}
+{%block title%} OCSSC | Account| Edit {%endblock%}
 
     <!-- /.content -->
 {%block content%}
@@ -266,11 +266,11 @@
                    <div class="form-group"> 
                       <label> Branch</label> 
                       <select required name="office_branch" class="form-control form-control-uniform" data-fouc>
-                        <option value="{{form.office_branch}}">{{form.office_branch}}</option>
+                         <option value="{{form.office_branch.id}}">{{form.office_branch}}</option>
                           {%for name in branchs%}
-                            {%if name.name == form.office_branch %}
+                            {%if name == form.office_branch %}
                             {%else%}
-                            <option value="{{name}}">{{name}}</option>
+                            <option value="{{name.id}}">{{name}}</option>
                             {%endif%}
                           {%endfor%}
                       </select>

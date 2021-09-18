@@ -21,6 +21,10 @@
 <!-- date-range-picker -->
 <script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
 
+
+
+
+
 <script>
   $(function () {
     //Initialize Select2 Elements
@@ -157,12 +161,157 @@
 </script>
  {% endblock %}
 {%load crispy_forms_tags %}
-{%block title%} OCSSC | Create {%endblock%}
+{%block title%} OCSSC | Account| Create {%endblock%}
 
     <!-- /.content -->
 {%block content%}
     <!---------->
+           {%if detail%}
+               <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0"> Acccount information</h1>
+          </div><!-- /.col -->
+           
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+      <section class="content">
+      <div class="container-fluid">
+
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-10">
+            <!-- general form elements -->
+            
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Full information of <b>{{form.username}}</b></h3>
+              </div>
+
+              <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                <div class="text-center">
+                  <img class="profile-user-img img-fluid img-circle"
+                       src="{{form.photograph.url}}"
+                       alt="User profile picture">
+                </div>
+                
+
+                <h3 class="profile-username text-center">
+                    {{form.first_name}} {{form.last_name}}</h3>
+
+
+              </div>
+
+              <!-- /.card-body -->
+            </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+                <div class="card-body">
+
+
+                <div class="row mb-3">
+                        <div class="col-sm-6">
+
+                <strong> Phone</strong>
+                <p class="text-muted">
+                    {{form.phone_number}}
+                </p>
+
+                <hr>
+
+                <strong> Address </strong>
+
+                <p class="text-muted">
+                    {{form.address}}
+                </p>
+
+                <hr>
+
+                <strong>City </strong>
+
+                <p class="text-muted">
+                    {{form.city}}
+                </p>
+
+                <hr>
+
+                <strong> Documents</strong>
+
+                <p class="text-muted">
+                    <img class="img-fluid" src="{{form.qualification_document.url}}" alt="Document">
+                    
+                </p>
+
+                <hr>
+              </div>
+
+              <div class="col-sm-6">
+                <strong> Position</strong>
+
+                <p class="text-muted">
+                  {%if form.is_manager %}
+                    Manager
+                  {%endif%}
+
+                  {%if form.is_auditor %}
+                    Auditor
+                  {%endif%}
+
+                  {%if form.is_customer_service %}
+                    Customer Service
+                  {%endif%}
+
+                  {%if form.is_system_admin %}
+                    System Admin
+                  {%endif%}
+                </p>
+
+                <hr>
+                <strong> Office Branch</strong>
+
+                <p class="text-muted">
+                    {{form.office_branch}}
+                </p>
+                <hr>
+
+                <strong> Date Of Hire</strong>
+
+                <p class="text-muted">
+                    {{form.date_of_hire}}
+                </p>
+
+                <hr>
+                
+                <strong> Identification </strong>
+
+                <p class="text-muted">
+                  <img class="img-fluid" src="{{form.identification.url}}" alt="identification">
+                    
+                </p>
+
+                <hr>
+
+                </div>
+            </div>
+
+              </div>
+                </div>
+                <!-- /.card-body -->
+        
+        </div>
+        </div>
+ 
+         </div>
+       </section>
+       {%endif%}
         <!-- Content Header (Page header) -->
+        {%if create%}
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -195,25 +344,27 @@
                   {% endif %}                                                       
                   {%csrf_token%}
                   <div class="form-group">
-                    <label for="exampleInputEmail1">First Name</label> 
-                    {{form.first_name}}
+                    <label for="exampleInputPassword1">User Name</label> 
+                    {{form.username}}
                   </div>
+
                   <div class="form-group">
                     <label for="exampleInputPassword1">Password</label> 
                     {{form.password1}}
                   </div>
+
                   <div class="form-group">
                     <label for="exampleInputPassword1">Confirm Password</label> 
                     {{form.password2}}
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputPassword1">Last Name</label> 
-                    {{form.last_name}}
+                    <label for="exampleInputEmail1">First Name</label> 
+                    {{form.first_name}}
                   </div>
 
                   <div class="form-group">
-                    <label for="exampleInputPassword1">User Name</label> 
-                    {{form.username}}
+                    <label for="exampleInputPassword1">Last Name</label> 
+                    {{form.last_name}}
                   </div>
 
                   <div class="form-group">
@@ -285,6 +436,8 @@
          </div>
        </section>
 
+       {%endif%}
+
        <script>
          //Date picker
     $('#reservationdate').datetimepicker({
@@ -299,6 +452,8 @@
       format: 'LT'
     })
        </script>
+
+
   {%endblock%}
 
                 

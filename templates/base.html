@@ -44,7 +44,7 @@
   <!-- AdminLTE App -->
   <script src="/static/dist/js/adminlte.min.js"></script>
   <!-- AdminLTE for demo purposes -->
-  <script src="/static/dist/js/demo.js"></script>
+  
 
   <script>
     $(function () {
@@ -84,29 +84,59 @@
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
         
+      <!------
 
-        <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
             <i class="far fa-comments"></i>
             <span class="badge badge-danger navbar-badge">3</span>
           </a> 
         </li>
+        -->
+
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown">
-          <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="far fa-bell"></i>
+          {%if user%}
+          <a class="nav-link" href="{%url 'logout' %}">
+            <i class="fas fa-sign-out-alt"></i>
           </a>
-          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-            <span class="dropdown-header">15 Notifications</span>
-            <div class="dropdown-divider"></div> 
-          </div>
+          {%endif%}
         </li> 
-
+      
       </ul>
     </nav>
     <!-- /.navbar -->
+    <div class="page-header page-header-light">
+      <div class="row"> 
+          <div class="col-md-9">
+        <div class="page-header-content header-elements-md-inline">
+          
+          </div>
+        </div>
+          <div class="col-md-3">
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-{{message.tags}} border-0 alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+            <span class="font-weight-semibold">{{message}}</span>
+          </div>
 
+          {% endfor %}
+          {% endif %}
+          </div>
+          <!-- {% block messages %}
+          
+          {% endblock messages %} -->
+          <!-- <div class="header-elements d-none">
+            <div class="d-flex justify-content-center">
+              <a href="#" class="btn btn-link btn-float text-default"><i class="icon-bars-alt text-primary"></i><span>Statistics</span></a>
+              <a href="#" class="btn btn-link btn-float text-default"><i class="icon-calculator text-primary"></i> <span>Invoices</span></a>
+              <a href="#" class="btn btn-link btn-float text-default"><i class="icon-calendar5 text-primary"></i> <span>Schedule</span></a>
+            </div>
+          </div> -->
+        </div>
+
+      </div>
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
@@ -124,9 +154,31 @@
             <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
           </div>
           --->
+          
+        <img src="{{user.photograph.url}}" alt="User image" class="brand-image img-circle elevation-3" style="opacity: .8">
+      </br>
+        <span class="brand-text font-weight-light">
+          
           <div class="info">
-            <a href="#" class="d-block">use name</a>
+            {% if user.is_manager%}
+            <a href="#" class="d-block">{{user.username}} - Manager</a>
+            {%endif%}
+
+            {% if user.is_auditor%}
+            <a href="#" class="d-block">{{user.username}} - Auditor</a>
+            {%endif%}
+
+            {% if user.is_customer_service%}
+            <a href="#" class="d-block">{{user.username}} - Customer Service</a>
+            {%endif%}
+
+            {% if user.is_system_admin%}
+            <a href="#" class="d-block">{{user.username}} - System Admin</a>
+            {%endif%}
           </div>
+
+        </span>
+          
         </div>
 
          <!-- Sidebar Menu -->
@@ -169,21 +221,43 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-hand-holding-usd"></i> 
-                <p>
-                  Loan System
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
               <a href="{%url 'transaction_list' %}" class="nav-link">
                 <i class="nav-icon fas fas fa-receipt"></i> 
                 <p>
                   Transaction History
                 </p>
-              </a>
-            </li>
+              </a> 
+            </li> 
+
+            <li class="nav-item menu-open">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-hand-holding-usd"></i> 
+              <p>
+                Loan System
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{%url 'loan_type_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Loan Type</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{%url 'loan_application_list' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Loan Applications</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{%url 'loan_application_approved' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Approved Loans</p>
+                </a>
+              </li>
+            </ul>
+          </li>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->

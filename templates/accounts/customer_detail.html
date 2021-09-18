@@ -3,7 +3,7 @@
 
  {% endblock %}
 {%load crispy_forms_tags %}
-{%block title%} OCSSC | Detail {%endblock%}
+{%block title%} OCSSC | Customer| Detail {%endblock%}
 
     <!-- /.content -->
 {%block content%}
@@ -13,7 +13,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Add A New Customer</h1>
+            <h1 class="m-0"> Customer Customer information</h1>
           </div><!-- /.col -->
            
         </div><!-- /.row -->
@@ -23,102 +23,217 @@
 
       <section class="content">
       <div class="container-fluid">
+
         <div class="row">
-          
-         <div class="col-lg-12">
-         <div class="card"> 
-                       
+          <!-- left column -->
+          <div class="col-md-10">
+            <!-- general form elements -->
+            
+            <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Customer</h3>
+                <h3 class="card-title">Full information of <b>{{form.account_number}}</b></h3>
               </div>
-              <!-- /.card-header -->
-              <form action="" method="post" enctype="multipart/form-data">
-                <div class="card-body">
-                  {%if form.errors%}
-                    <div class="alert alert-danger" role="alert">
-                      {{form.errors}}
+
+              <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                <div class="text-center">
+                  <img class="profile-user-img img-fluid img-circle"
+                       src="{{form.photograph.url}}"
+                       alt="User profile picture">
+                </div>
+                
+
+                <h3 class="profile-username text-center">
+                    {{form.first_name}} {{form.middle_name}} {{form.last_name}}</h3>
+
+
+              </div>
+              <div class="row">
+                        <!-- left column -->
+                   <div class="col-md-3">
+                    <div class="header-elements" align="left">
+                    
+                    <a href="{% url 'customer_edit' id=form.id %}" type="button" class="btn btn-success">Edit customer information</a>
                     </div>
-                  {% endif %}                                                       
-                  {%csrf_token%}
-                  <div class="form-group">
-                    <label for="exampleInputEmail1"> Name</label> 
-                    {{form.first_name}} {{form.middle_name}} {{form.last_name}}
                   </div>
 
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Phone</label> 
+                  <div class="col-md-6">
+                  </div>
+
+                  <div class="col-md-3">
+                    {% if loan %}
+                    {%else%}
+                    <div class="header-elements" align="right">
+                    
+                    <a href="{% url 'loan_application' id=form.id %}" type="button" onclick="return confirm ('You are starting a loan application for this user')" class="btn btn-success">Loan Request</a>
+                    </div>
+                    {%endif%}
+                </div>
+              </div>
+
+              <!-- /.card-body -->
+            </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+                <div class="card-body">
+
+
+                <div class="row mb-3">
+                        <div class="col-sm-6">
+
+                <strong> Phone</strong>
+                <p class="text-muted">
                     {{form.phone_number}}
-                  </div>
+                </p>
 
-                  <div class="form-group">
-                    <label > Deposit Amount</label>
+                <hr>
+
+                <strong> Current balance in the account </strong>
+
+                <p class="text-muted">
                     {{form.initial_deposit}}
-                  </div>
+                </p>
 
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Account Number</label> 
-                    {{form.account_number}}
-                  </div>
-                  
+                <hr>
 
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">address</label> 
-                    {{form.address}}
-                  </div>
+                <strong>Date of account creation </strong>
 
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">city</label> 
-                    {{form.city}}
-                  </div>
-
-                  <div class="form-group row">
-                    <label class="col-form-label col-lg-3">Branch</label>
-                    {{form.office_branch}}
-                  </div>
-
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Document</label> 
-                    {{form.document}}
-                  </div>
-
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Photo Graph</label> 
-                    {{form.photograph}}
-                  </div>
-
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">identification</label> 
-                    {{form.identification}}
-                  </div>
-
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Active</label> 
-                    {{form.active}}
-                  </div>
-
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Date</label> 
+                <p class="text-muted">
                     {{form.date}}
-                  </div>
+                </p>
 
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">created_by</label> 
-                    {{form.created_by}}
-                  </div>
+                <hr>
 
-                  
-                  </div>
+                <strong> Document</strong>
 
+                <p class="text-muted">
+                    <img class="img-fluid" src="{{form.document.url}}" alt="Document">
+                    
+                </p>
+
+                <hr>
+              </div>
+
+              <div class="col-sm-6">
+                <strong> Address</strong>
+
+                <p class="text-muted">
+                    {{form.address}}
+                </p>
+
+                <hr>
+                <strong> City</strong>
+
+                <p class="text-muted">
+                    {{form.city}}
+                </p>
+                <hr>
+
+                <strong> Office Branch</strong>
+
+                <p class="text-muted">
+                    {{form.office_branch}}
+                </p>
+
+                <hr>
+                
+                <strong> Identification </strong>
+
+                <p class="text-muted">
+                  <img class="img-fluid" src="{{form.identification.url}}" alt="identification">
+                    
+                </p>
+
+                <hr>
+
+                </div>
+            </div>
+
+              </div>
                 </div>
                 <!-- /.card-body -->
+        <section class="content">
+          <div class="container-fluid">
+                <div class="row">
+                  <div class="col-lg-12">
+                   <div class="card">
+                      <div class="card-header">
 
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-              </form>
-         </div>       
-         </div>
-         </div>
+                             
+                        </div>
+
+                
+                <!-- /.card-header -->
+                      <div class="card-body">
+                        
+                        <table id="example1" class="table table-bordered table-striped">
+
+                          <h2>User Transactions</h2>
+                          <div class="row">
+                            <div class="col-lg-2">
+
+                              <a href="{% url 'transact' id=form.id %}" type="button" class="btn btn-block btn-outline-primary btn-sm">Add a transaction </a>
+
+                            </div>
+
+                            <div class="col-lg-5">
+                            </div>
+
+                            <div class="col-lg-5">
+                            </div>
+                          </div>
+                          
+
+
+                          <thead>
+                           <tr>
+ 
+                            <th>Name </th>
+                            <th>Account Name </th>
+                            <th>Inital</th>
+                            <th>Final</th>
+                            <th>Transaction</th>
+                            <th>Date </th>
+                            
+                          </tr>
+                          </thead>
+
+                          <tbody>
+                            {%for form in banking%}
+                          <tr>
+                            <th>{{form.customer}}</th>
+                            <th>{{form.customer.account_number}}</th>
+                            <th>{{form.initial_value}}</th>
+                            <th>{{form.final_value}}</th>
+
+                            <th>{{form.transaction}}</th>
+                            <th>{{form.date}}</th>
+                          </tr>
+                            {%endfor%}
+                        
+                          </tbody>
+                          <tfoot>
+                          <tr>
+
+                             <th>Name </th>
+                            <th>Account Name </th>
+                             <th>Inital</th>
+                            <th>Final</th>
+                            <th>Transaction</th>
+                            <th>Date </th>
+                            
+                          </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                <!-- /.card-body -->
+                      </div>
+                    </div>
+                  </div>
+          </div>
+        </section>
+        </div>
+        </div>
  
          </div>
        </section>
